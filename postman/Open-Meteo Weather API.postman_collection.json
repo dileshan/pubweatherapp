@@ -1,0 +1,116 @@
+{
+  "info": {
+    "name": "Open-Meteo Weather API",
+    "description": "The keyless Open-Meteo requests made by My Weather App (App.tsx). No authentication is required.\n\nCollection variables `latitude` and `longitude` default to the app's Denver fallback location; `searchQuery` is the city search text.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Forecast (current, hourly, 10-day)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Has current, hourly, and daily blocks', function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body).to.have.property('current');",
+              "  pm.expect(body).to.have.property('hourly');",
+              "  pm.expect(body).to.have.property('daily');",
+              "});",
+              "",
+              "pm.test('Returns 10 daily entries', function () {",
+              "  pm.expect(pm.response.json().daily.time).to.have.lengthOf(10);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "The forecast request issued by `loadWeather` in App.tsx. Temperatures are always requested in Fahrenheit and wind in mph; the app converts to Celsius at render time.",
+        "url": {
+          "raw": "{{forecastBaseUrl}}/v1/forecast?latitude={{latitude}}&longitude={{longitude}}&current=temperature_2m,apparent_temperature,relative_humidity_2m,surface_pressure,dew_point_2m,wind_speed_10m,wind_direction_10m,weather_code&hourly=temperature_2m,precipitation_probability,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,wind_speed_10m_max&forecast_days=10&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto",
+          "host": ["{{forecastBaseUrl}}"],
+          "path": ["v1", "forecast"],
+          "query": [
+            { "key": "latitude", "value": "{{latitude}}" },
+            { "key": "longitude", "value": "{{longitude}}" },
+            {
+              "key": "current",
+              "value": "temperature_2m,apparent_temperature,relative_humidity_2m,surface_pressure,dew_point_2m,wind_speed_10m,wind_direction_10m,weather_code"
+            },
+            {
+              "key": "hourly",
+              "value": "temperature_2m,precipitation_probability,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m"
+            },
+            {
+              "key": "daily",
+              "value": "temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,wind_speed_10m_max"
+            },
+            { "key": "forecast_days", "value": "10" },
+            { "key": "temperature_unit", "value": "fahrenheit" },
+            { "key": "wind_speed_unit", "value": "mph" },
+            { "key": "timezone", "value": "auto" }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "City search (geocoding)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Results carry a name and coordinates', function () {",
+              "  const results = pm.response.json().results || [];",
+              "  results.forEach(function (result) {",
+              "    pm.expect(result).to.have.property('name');",
+              "    pm.expect(result.latitude).to.be.a('number');",
+              "    pm.expect(result.longitude).to.be.a('number');",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "The city search request issued by the search box in App.tsx. The `results` key is omitted from the response when nothing matches.",
+        "url": {
+          "raw": "{{geocodingBaseUrl}}/v1/search?name={{searchQuery}}&count=8&language=en&format=json",
+          "host": ["{{geocodingBaseUrl}}"],
+          "path": ["v1", "search"],
+          "query": [
+            { "key": "name", "value": "{{searchQuery}}" },
+            { "key": "count", "value": "8" },
+            { "key": "language", "value": "en" },
+            { "key": "format", "value": "json" }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    { "key": "forecastBaseUrl", "value": "https://api.open-meteo.com" },
+    { "key": "geocodingBaseUrl", "value": "https://geocoding-api.open-meteo.com" },
+    { "key": "latitude", "value": "39.094393" },
+    { "key": "longitude", "value": "-104.869855" },
+    { "key": "searchQuery", "value": "Denver" }
+  ]
+}

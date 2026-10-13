@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "My Weather App",
+    "slug": "my-weather-app",
+    "version": "1.0.0",
+    "icon": "./assets/sun_behind_small_cloud.png",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#112d42"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow My Weather App to use your location to show your local forecast."
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.myweather.app"
+    },
+    "android": {
+      "package": "com.myweather.app",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "79240c88-b2a6-4c3e-b510-47f683b56b64"
+      }
+    }
+  }
+}
