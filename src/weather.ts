@@ -23,7 +23,8 @@ export function isNightHour(time: string) {
 }
 
 export function weatherIcon(code: number, night = false) {
-  if (code === 0) return night ? '🌙' : '☀️';
+  if (night) return '🌙';
+  if (code === 0) return '☀️';
   if (code <= 2) return '🌤️';
   if (code === 3) return '☁️';
   if (code >= 45 && code <= 48) return '🌫️';

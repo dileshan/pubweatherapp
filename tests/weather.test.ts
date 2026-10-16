@@ -57,9 +57,17 @@ describe('isNightHour', () => {
 });
 
 describe('weatherIcon', () => {
-  it('uses the moon for clear skies at night', () => {
+  it('default clear skies and sunny', () => {
     expect(weatherIcon(0)).toBe('☀️');
-    expect(weatherIcon(0, true)).toBe('🌙');
+  });
+
+  it('ensures that the moon is used regardless of weather', () => {
+    expect(weatherIcon(3, true)).toBe('🌙');
+  });
+
+  it.each([[0,1,2,3,30,45,48,51,55,56,57,61,67,71,77,80,82,85,86,95,99]])
+  ('ensures that the moon is used regardless of weather', (code) => {
+    expect(weatherIcon(code, true)).toBe('🌙');
   });
 
   it.each([
